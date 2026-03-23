@@ -1,83 +1,55 @@
 body {
     margin: 0;
     background: #050505;
+    color: #fff;
+    font-family: 'Courier New', Courier, monospace;
     display: flex;
     justify-content: center;
     align-items: center;
     height: 100vh;
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    color: white;
-}
-
-#game-container {
-    width: 500px;
-    height: 600px;
-    background: radial-gradient(circle, #111 0%, #000 100%);
-    border: 3px solid #333;
-    position: relative;
     overflow: hidden;
-    box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
 }
 
-#ui {
-    padding: 15px;
+#game-ui {
+    position: relative;
+    border: 3px solid #00aaff;
+    box-shadow: 0 0 20px #00aaff55;
+}
+
+#stats {
+    position: absolute;
+    top: -30px;
+    width: 100%;
     display: flex;
     justify-content: space-between;
-    background: rgba(255, 255, 255, 0.05);
-    font-weight: bold;
-    text-transform: uppercase;
-    letter-spacing: 1px;
+    font-size: 1.2rem;
 }
 
-#player {
-    width: 40px;
-    height: 40px;
-    background: linear-gradient(to top, #00d2ff, #3a7bd5);
-    position: absolute;
-    bottom: 20px;
-    left: 230px;
-    border-radius: 4px;
-    box-shadow: 0 0 15px #00d2ff;
-    transition: left 0.1s ease-out;
+canvas {
+    display: block;
+    background: #000;
 }
 
-.bullet {
-    width: 4px;
-    height: 20px;
-    background: #fff;
-    box-shadow: 0 0 10px #fff;
+#overlay {
     position: absolute;
-    border-radius: 2px;
-}
-
-.enemy {
-    width: 35px;
-    height: 35px;
-    background: linear-gradient(45deg, #ff416c, #ff4b2b);
-    position: absolute;
-    border-radius: 50% 50% 4px 4px;
-    box-shadow: 0 0 10px #ff416c;
-}
-
-#game-over {
-    display: none;
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    text-align: center;
     background: rgba(0, 0, 0, 0.9);
     padding: 30px;
-    border: 2px solid #ff416c;
+    text-align: center;
+    border: 2px solid red;
+    border-radius: 10px;
     z-index: 100;
 }
 
+.hidden { display: none; }
+
 button {
-    padding: 10px 20px;
-    background: #00d2ff;
+    background: #00aaff;
     border: none;
+    padding: 10px 20px;
     color: white;
     cursor: pointer;
     font-weight: bold;
-    margin-top: 10px;
+    margin-top: 15px;
 }
+
+#ranking ul { list-style: none; padding: 0; color: yellow; }
