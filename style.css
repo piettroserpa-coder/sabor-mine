@@ -1,50 +1,83 @@
 body {
     margin: 0;
-    background-color: #111;
+    background: #050505;
     display: flex;
     justify-content: center;
     align-items: center;
     height: 100vh;
-    overflow: hidden;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     color: white;
-    font-family: sans-serif;
 }
 
 #game-container {
-    width: 600px;
-    height: 400px;
-    border: 2px solid #fff;
+    width: 500px;
+    height: 600px;
+    background: radial-gradient(circle, #111 0%, #000 100%);
+    border: 3px solid #333;
     position: relative;
-    background-color: #000;
     overflow: hidden;
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
+}
+
+#ui {
+    padding: 15px;
+    display: flex;
+    justify-content: space-between;
+    background: rgba(255, 255, 255, 0.05);
+    font-weight: bold;
+    text-transform: uppercase;
+    letter-spacing: 1px;
 }
 
 #player {
     width: 40px;
     height: 40px;
-    background-color: #00aaff;
+    background: linear-gradient(to top, #00d2ff, #3a7bd5);
     position: absolute;
-    bottom: 10px;
-    left: 280px;
+    bottom: 20px;
+    left: 230px;
+    border-radius: 4px;
+    box-shadow: 0 0 15px #00d2ff;
+    transition: left 0.1s ease-out;
 }
 
 .bullet {
-    width: 5px;
-    height: 15px;
-    background-color: yellow;
+    width: 4px;
+    height: 20px;
+    background: #fff;
+    box-shadow: 0 0 10px #fff;
     position: absolute;
+    border-radius: 2px;
 }
 
 .enemy {
-    width: 40px;
-    height: 40px;
-    background-color: red;
+    width: 35px;
+    height: 35px;
+    background: linear-gradient(45deg, #ff416c, #ff4b2b);
     position: absolute;
+    border-radius: 50% 50% 4px 4px;
+    box-shadow: 0 0 10px #ff416c;
 }
 
-#score {
+#game-over {
+    display: none;
     position: absolute;
-    top: 10px;
-    left: 10px;
-    z-index: 10;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    text-align: center;
+    background: rgba(0, 0, 0, 0.9);
+    padding: 30px;
+    border: 2px solid #ff416c;
+    z-index: 100;
+}
+
+button {
+    padding: 10px 20px;
+    background: #00d2ff;
+    border: none;
+    color: white;
+    cursor: pointer;
+    font-weight: bold;
+    margin-top: 10px;
 }
