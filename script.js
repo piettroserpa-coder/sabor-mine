@@ -1,86 +1,105 @@
 const container = document.getElementById('game-container');
 const player = document.getElementById('player');
-const scoreElement = document.getElementById('score');
+const scoreEl = document.getElementById('score');
+const levelEl = document.getElementById('level');
+const highScoreEl = document.getElementById('high-score');
+const gameOverScreen = document.getElementById('game-over');
 
 let score = 0;
-let playerX = 280;
+let level = 1;
+let playerX = 230;
+let isGameOver = false;
+let enemySpeed = 2;
+let spawnRate = 1500;
+let enemyInterval;
 
-// Movimentação do Jogador
+// Carregar recorde do Ranking Local
+let highScore = localStorage.getItem('highScore') || 0;
+highScoreEl.innerText = highScore;
+
+// Movimento do Jogador
 document.addEventListener('keydown', (e) => {
-    if (e.key === 'ArrowLeft' && playerX > 0) {
-        playerX -= 20;
-    } else if (e.key === 'ArrowRight' && playerX < 560) {
-        playerX += 20;
-    } else if (e.key === ' ') {
-        shoot();
-    }
+    if (isGameOver) return;
+    if (e.key === 'ArrowLeft' && playerX > 0) playerX -= 25;
+    if (e.key === 'ArrowRight' && playerX < 460) playerX += 25;
+    if (e.key === ' ') shoot();
     player.style.left = playerX + 'px';
 });
 
-// Função para Atirar
 function shoot() {
     const bullet = document.createElement('div');
     bullet.classList.add('bullet');
-    bullet.style.left = (playerX + 17) + 'px';
-    bullet.style.bottom = '50px';
+    bullet.style.left = (playerX + 18) + 'px';
+    bullet.style.bottom = '60px';
     container.appendChild(bullet);
 
-    let moveBullet = setInterval(() => {
-        let bulletBottom = parseInt(bullet.style.bottom);
-        bullet.style.bottom = (bulletBottom + 5) + 'px';
+    let bulletMove = setInterval(() => {
+        let bBot = parseInt(bullet.style.bottom);
+        bullet.style.bottom = (bBot + 7) + 'px';
 
-        // Remover bala se sair da tela
-        if (bulletBottom > 400) {
-            clearInterval(moveBullet);
-            bullet.remove();
-        }
-
-        // Checar colisão com inimigos
         const enemies = document.querySelectorAll('.enemy');
-        enemies.forEach(enemy => {
-            if (checkCollision(bullet, enemy)) {
-                enemy.remove();
+        enemies.forEach(en => {
+            if (checkCollision(bullet, en)) {
+                en.remove();
                 bullet.remove();
-                clearInterval(moveBullet);
-                score += 10;
-                scoreElement.innerText = `Pontos: ${score}`;
+                clearInterval(bulletMove);
+                updateScore();
             }
         });
+
+        if (bBot > 600) {
+            clearInterval(bulletMove);
+            bullet.remove();
+        }
     }, 10);
 }
 
-// Criar Inimigos aleatoriamente
 function createEnemy() {
+    if (isGameOver) return;
     const enemy = document.createElement('div');
     enemy.classList.add('enemy');
-    enemy.style.left = Math.floor(Math.random() * 560) + 'px';
+    enemy.style.left = Math.floor(Math.random() * 460) + 'px';
     enemy.style.top = '0px';
     container.appendChild(enemy);
 
-    let moveEnemy = setInterval(() => {
-        let enemyTop = parseInt(enemy.style.top);
-        enemy.style.top = (enemyTop + 2) + 'px';
-
-        if (enemyTop > 400) {
-            clearInterval(moveEnemy);
+    let enemyMove = setInterval(() => {
+        if (isGameOver) {
+            clearInterval(enemyMove);
             enemy.remove();
-            // Aqui você poderia adicionar uma lógica de Game Over
+            return;
+        }
+
+        let eTop = parseInt(enemy.style.top);
+        enemy.style.top = (eTop + enemySpeed) + 'px';
+
+        // Colisão: Azul encosta no Vermelho (MORRE)
+        if (checkCollision(player, enemy)) {
+            endGame();
+        }
+
+        if (eTop > 600) {
+            clearInterval(enemyMove);
+            enemy.remove();
         }
     }, 20);
 }
 
-// Loop de criação de inimigos
-setInterval(createEnemy, 1500);
+function updateScore() {
+    score += 10;
+    scoreEl.innerText = score;
 
-// Função de Detecção de Colisão
-function checkCollision(obj1, obj2) {
-    const rect1 = obj1.getBoundingClientRect();
-    const rect2 = obj2.getBoundingClientRect();
-
-    return !(
-        rect1.top > rect2.bottom ||
-        rect1.bottom < rect2.top ||
-        rect1.right < rect2.left ||
-        rect1.left > rect2.right
-    );
+    // Lógica de Novas Fases (A cada 100 pontos)
+    if (score % 100 === 0) {
+        level++;
+        levelEl.innerText = level;
+        enemySpeed += 0.5; // Fica mais rápido
+        spawnRate = Math.max(500, spawnRate - 100); // Aparece mais rápido
+        clearInterval(enemyInterval);
+        enemyInterval = setInterval(createEnemy, spawnRate);
+    }
 }
+
+function checkCollision(a, b) {
+    let aRect = a.getBoundingClientRect();
+    let bRect = b.getBoundingClientRect();
+    return !(a
