@@ -3,16 +3,16 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Arcade Stellar Shooter</title>
+    <title>Stellar Shooter Pro</title>
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
     <div id="login-screen">
         <div class="login-box">
             <h1>STELLAR<br><span>SHOOTER</span></h1>
-            <p>Defenda a galáxia, recruta!</p>
+            <p>Piloto, identifique-se para a missão:</p>
             <input type="text" id="username" placeholder="Seu Nickname" maxlength="12">
-            <button onclick="startGame()">INICIAR MISSÃO</button>
+            <button onclick="startGame()">DECOLAR</button>
         </div>
     </div>
 
@@ -27,20 +27,16 @@
 
     <div id="overlay" class="hidden">
         <div class="modal">
-            <h2 id="status-title">NAVE DESTRUÍDA!</h2>
-            <p>Piloto: <span id="player-finish"></span></p>
+            <h2>NAVE DESTRUÍDA!</h2>
             <p>Score Final: <b id="final-score">0</b></p>
-            
             <div id="ranking">
-                <h3>TOP 5 - HALL DA FAMA</h3>
+                <h3>RANKING GLOBAL</h3>
                 <ul id="rank-list"></ul>
             </div>
-            
             <button class="btn-restart" onclick="restartGame()">RENOVAR FROTA</button>
             <button class="btn-exit" onclick="location.reload()">SAIR</button>
         </div>
     </div>
-
     <script src="script.js"></script>
 </body>
 </html>
