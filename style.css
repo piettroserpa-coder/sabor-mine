@@ -1,55 +1,42 @@
-body {
-    margin: 0;
-    background: #050505;
-    color: #fff;
-    font-family: 'Courier New', Courier, monospace;
+/* ... mantenha o que já tinha e adicione/altere abaixo ... */
+
+#login-screen {
+    position: fixed;
+    inset: 0;
+    background: radial-gradient(circle, #1a1a2e 0%, #000 100%);
     display: flex;
     justify-content: center;
     align-items: center;
-    height: 100vh;
-    overflow: hidden;
+    z-index: 200;
 }
 
-#game-ui {
-    position: relative;
-    border: 3px solid #00aaff;
-    box-shadow: 0 0 20px #00aaff55;
-}
-
-#stats {
-    position: absolute;
-    top: -30px;
-    width: 100%;
-    display: flex;
-    justify-content: space-between;
-    font-size: 1.2rem;
-}
-
-canvas {
-    display: block;
-    background: #000;
-}
-
-#overlay {
-    position: absolute;
-    background: rgba(0, 0, 0, 0.9);
-    padding: 30px;
+.login-box {
     text-align: center;
-    border: 2px solid red;
-    border-radius: 10px;
-    z-index: 100;
+    background: rgba(255, 255, 255, 0.05);
+    padding: 40px;
+    border: 2px solid #00aaff;
+    border-radius: 15px;
+    box-shadow: 0 0 30px #00aaff33;
 }
 
-.hidden { display: none; }
-
-button {
-    background: #00aaff;
-    border: none;
-    padding: 10px 20px;
-    color: white;
-    cursor: pointer;
-    font-weight: bold;
-    margin-top: 15px;
+.login-box h1 {
+    font-size: 3rem;
+    margin-bottom: 20px;
+    line-height: 0.8;
 }
 
-#ranking ul { list-style: none; padding: 0; color: yellow; }
+.login-box h1 span { color: #00aaff; font-size: 1.5rem; }
+
+input {
+    display: block;
+    width: 250px;
+    padding: 12px;
+    margin: 20px auto;
+    background: #000;
+    border: 1px solid #00aaff;
+    color: #fff;
+    text-align: center;
+    font-family: inherit;
+}
+
+.hidden { display: none !important; }
