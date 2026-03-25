@@ -2,41 +2,40 @@
 <html lang="pt-br">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Stellar Shooter Pro</title>
+    <title>Alien Invasion - Arcade</title>
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
     <div id="login-screen">
-        <div class="login-box">
-            <h1>STELLAR<br><span>SHOOTER</span></h1>
-            <p>Piloto, identifique-se para a missão:</p>
-            <input type="text" id="username" placeholder="Seu Nickname" maxlength="12">
-            <button onclick="startGame()">DECOLAR</button>
+        <div class="box">
+            <h1>ALIEN<span>INVASION</span></h1>
+            <input type="text" id="username" placeholder="Seu Nickname" maxlength="10">
+            <button onclick="startGame()">INICIAR DEFESA</button>
         </div>
     </div>
 
     <div id="game-ui" class="hidden">
-        <div id="stats">
-            <div class="stat-item">PILOTO: <span id="display-name">---</span></div>
-            <div class="stat-item">PONTOS: <span id="score">0</span></div>
-            <div class="stat-item">FASE: <span id="level">1</span></div>
+        <div id="hud">
+            <span>PILOTO: <b id="display-name"></b></span>
+            <span>PONTOS: <b id="score">0</b></span>
+            <span>FASE: <b id="level">1</b></span>
         </div>
         <canvas id="gameCanvas"></canvas>
     </div>
 
     <div id="overlay" class="hidden">
-        <div class="modal">
-            <h2>NAVE DESTRUÍDA!</h2>
-            <p>Score Final: <b id="final-score">0</b></p>
-            <div id="ranking">
-                <h3>RANKING GLOBAL</h3>
+        <div class="box">
+            <h2 style="color: #ff0055;">MISSÃO FALHOU!</h2>
+            <p>Pontos: <span id="final-score">0</span></p>
+            <div id="ranking-container">
+                <h3>TOP 5 RANKING</h3>
                 <ul id="rank-list"></ul>
             </div>
-            <button class="btn-restart" onclick="restartGame()">RENOVAR FROTA</button>
-            <button class="btn-exit" onclick="location.reload()">SAIR</button>
+            <button onclick="restartGame()">RECOMEÇAR</button>
+            <button onclick="location.reload()" style="background:#444;">SAIR</button>
         </div>
     </div>
+
     <script src="script.js"></script>
 </body>
 </html>
