@@ -6,6 +6,7 @@ canvas.height = 550;
 let user = "", score = 0, level = 1, gameActive = false;
 let enemies = [], bullets = [], particles = [], powerUps = [];
 let boss = null;
+let lastBossScore = 0; // Controla para o boss não nascer várias vezes no mesmo score
 let tripleShotTimer = 0;
 const keys = {};
 
@@ -18,7 +19,7 @@ window.addEventListener('keydown', e => {
 window.addEventListener('keyup', e => keys[e.code] = false);
 
 function startGame() {
-    user = document.getElementById('username').value || "Recruta";
+    user = document.getElementById('username').value || "Piloto";
     document.getElementById('display-name').innerText = user;
     document.getElementById('login-screen').classList.add('hidden');
     document.getElementById('game-ui').classList.remove('hidden');
@@ -38,11 +39,11 @@ function shoot() {
 }
 
 function createParticles(x, y, color) {
-    for(let i=0; i<8; i++) {
+    for(let i=0; i<10; i++) {
         particles.push({
             x, y, 
-            vx: (Math.random()-0.5)*6, 
-            vy: (Math.random()-0.5)*6, 
+            vx: (Math.random()-0.5)*8, 
+            vy: (Math.random()-0.5)*8, 
             life: 1, 
             color
         });
@@ -50,74 +51,82 @@ function createParticles(x, y, color) {
 }
 
 function spawnEnemy() {
-    if (!gameActive || boss) return; // Não nasce inimigo comum se o Boss estiver na tela
-    enemies.push({
-        x: Math.random() * (canvas.width - 40),
-        y: -40, w: 40, h: 30,
-        hp: 1,
-        speedY: 1.5 + (level * 0.3),
-        phase: Math.random() * 5
-    });
-    setTimeout(spawnEnemy, Math.max(300, 1500 - (level * 200)));
-}
-
-function checkBoss() {
-    if (score > 0 && score % 500 === 0 && !boss) {
-        boss = {
-            x: 200, y: -100, w: 200, h: 80,
-            hp: 20 + (level * 10),
-            maxHp: 20 + (level * 10),
-            speedX: 3,
-            targetY: 80
-        };
+    if (!gameActive) return;
+    if (!boss) { // Só spawna inimigo comum se NÃO houver boss
+        enemies.push({
+            x: Math.random() * (canvas.width - 40),
+            y: -40, w: 40, h: 30,
+            hp: 1,
+            speedY: 1.5 + (level * 0.3),
+            phase: Math.random() * 5
+        });
     }
+    setTimeout(spawnEnemy, Math.max(400, 1600 - (level * 200)));
 }
 
 function update() {
+    if (!gameActive) return;
+
     if (keys['ArrowLeft'] && player.x > 0) player.x -= player.speed;
     if (keys['ArrowRight'] && player.x < canvas.width - player.w) player.x += player.speed;
 
     if (tripleShotTimer > 0) tripleShotTimer--;
 
-    // Partículas
+    // Criar Boss a cada 500 pontos
+    if (score > 0 && score % 500 === 0 && lastBossScore !== score && !boss) {
+        lastBossScore = score;
+        boss = {
+            x: 200, y: -120, w: 200, h: 80,
+            hp: 30 + (level * 10),
+            maxHp: 30 + (level * 10),
+            speedX: 3,
+            targetY: 80
+        };
+        enemies = []; // Limpa inimigos comuns ao chegar o boss
+    }
+
+    // Lógica das Partículas
     particles.forEach((p, i) => {
-        p.x += p.vx; p.y += p.vy; p.life -= 0.02;
+        p.x += p.vx; p.y += p.vy; p.life -= 0.025;
         if(p.life <= 0) particles.splice(i, 1);
     });
 
-    // Balas
+    // Lógica das Balas
     bullets.forEach((b, i) => {
         b.x += b.vx; b.y += b.vy;
-        if (b.y < 0) bullets.splice(i, 1);
+        if (b.y < -20 || b.x < -20 || b.x > canvas.width + 20) bullets.splice(i, 1);
     });
 
-    // Power-ups
+    // Lógica dos Power-ups
     powerUps.forEach((p, i) => {
         p.y += 3;
-        if (rectIntersect(player.x, player.y, player.w, player.h, p.x, p.y, 20, 20)) {
-            tripleShotTimer = 400; // Aprox 7 segundos
+        if (rectIntersect(player.x, player.y, player.w, player.h, p.x, p.y, 25, 25)) {
+            tripleShotTimer = 500; 
             powerUps.splice(i, 1);
         }
+        if (p.y > canvas.height) powerUps.splice(i, 1);
     });
 
-    // Logica do Boss
+    // Lógica do Boss
     if (boss) {
         if (boss.y < boss.targetY) boss.y += 2;
         boss.x += boss.speedX;
         if (boss.x <= 0 || boss.x >= canvas.width - boss.w) boss.speedX *= -1;
 
-        // Colisão Bala -> Boss
+        // Colisão Jogador com Boss
+        if (rectIntersect(player.x, player.y, player.w, player.h, boss.x, boss.y, boss.w, boss.h)) gameOver();
+
+        // Colisão Bala com Boss
         bullets.forEach((b, bi) => {
-            if (rectIntersect(b.x, b.y, 5, 10, boss.x, boss.y, boss.w, boss.h)) {
+            if (rectIntersect(b.x, b.y, 4, 12, boss.x, boss.y, boss.w, boss.h)) {
                 boss.hp--;
-                bullets.splice(bi, 1);
                 createParticles(b.x, b.y, 'white');
+                bullets.splice(bi, 1);
                 if (boss.hp <= 0) {
+                    for(let j=0; j<30; j++) createParticles(boss.x + boss.w/2, boss.y + boss.h/2, '#ff00ff');
                     score += 200;
-                    createParticles(boss.x + 100, boss.y + 40, 'red');
-                    boss = null;
                     level++;
-                    spawnEnemy();
+                    boss = null;
                 }
             }
         });
@@ -131,13 +140,14 @@ function update() {
         if (rectIntersect(player.x, player.y, player.w, player.h, en.x, en.y, en.w, en.h)) gameOver();
 
         bullets.forEach((b, bi) => {
-            if (rectIntersect(b.x, b.y, 5, 10, en.x, en.y, en.w, en.h)) {
+            if (rectIntersect(b.x, b.y, 4, 12, en.x, en.y, en.w, en.h)) {
                 createParticles(en.x + 20, en.y + 15, '#00ff44');
                 if (Math.random() > 0.9) powerUps.push({x: en.x, y: en.y});
                 enemies.splice(i, 1);
                 bullets.splice(bi, 1);
                 score += 10;
-                checkBoss();
+                document.getElementById('score').innerText = score;
+                document.getElementById('level').innerText = level;
             }
         });
         if (en.y > canvas.height) enemies.splice(i, 1);
@@ -148,12 +158,14 @@ function draw() {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
 
     // Player
-    ctx.fillStyle = tripleShotTimer > 0 ? 'gold' : '#00f2ff';
+    ctx.fillStyle = tripleShotTimer > 0 ? '#ffea00' : '#00f2ff';
+    ctx.shadowBlur = 10; ctx.shadowColor = ctx.fillStyle;
     ctx.beginPath();
     ctx.moveTo(player.x + 20, player.y);
     ctx.lineTo(player.x + 40, player.y + 40);
     ctx.lineTo(player.x, player.y + 40);
     ctx.fill();
+    ctx.shadowBlur = 0;
 
     // Inimigos
     enemies.forEach(en => {
@@ -164,21 +176,35 @@ function draw() {
 
     // Boss
     if (boss) {
-        ctx.fillStyle = `rgb(255, ${255 * (boss.hp/boss.maxHp)}, 0)`;
+        let healthPercent = boss.hp / boss.maxHp;
+        ctx.fillStyle = `rgb(255, ${255 * healthPercent}, ${255 * healthPercent})`;
+        ctx.shadowBlur = 20; ctx.shadowColor = 'red';
         ctx.fillRect(boss.x, boss.y, boss.w, boss.h);
-        ctx.fillStyle = 'white';
-        ctx.fillText("BOSS HP: " + boss.hp, boss.x + 70, boss.y - 10);
+        
+        // Olhos do Boss
+        ctx.fillStyle = 'black';
+        ctx.fillRect(boss.x + 40, boss.y + 20, 30, 15);
+        ctx.fillRect(boss.x + 130, boss.y + 20, 30, 15);
+        
+        // Barra de Vida Boss
+        ctx.shadowBlur = 0;
+        ctx.fillStyle = 'red';
+        ctx.fillRect(boss.x, boss.y - 15, boss.w * healthPercent, 5);
     }
 
     // Power-ups
     powerUps.forEach(p => {
         ctx.fillStyle = 'gold';
-        ctx.beginPath(); ctx.arc(p.x+10, p.y+10, 10, 0, Math.PI*2); ctx.fill();
+        ctx.shadowBlur = 15; ctx.shadowColor = 'gold';
+        ctx.beginPath(); ctx.arc(p.x+12, p.y+12, 10, 0, Math.PI*2); ctx.fill();
+        ctx.shadowBlur = 0;
     });
 
-    // Balas e Partículas
-    ctx.fillStyle = 'yellow';
+    // Balas
+    ctx.fillStyle = 'white';
     bullets.forEach(b => ctx.fillRect(b.x, b.y, 4, 12));
+
+    // Partículas
     particles.forEach(p => {
         ctx.globalAlpha = p.life;
         ctx.fillStyle = p.color;
@@ -209,11 +235,11 @@ function saveRanking(name, pts) {
 function showRanking() {
     const list = document.getElementById('rank-list');
     const ranking = JSON.parse(localStorage.getItem('alienRank') || '[]');
-    list.innerHTML = ranking.map(r => `<li><span>${r.name}</span><b>${r.pts}</b></li>`).join('');
+    list.innerHTML = ranking.map(r => `<li><span>${r.name}</span><b>${r.pts} pts</b></li>`).join('');
 }
 
 function restartGame() {
-    location.reload();
+    location.reload(); // Forma mais segura de resetar todos os timers e variáveis
 }
 
 function loop() {
