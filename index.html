@@ -2,15 +2,15 @@
 <html lang="pt-br">
 <head>
     <meta charset="UTF-8">
-    <title>Alien Invasion - Arcade</title>
+    <title>Alien Invasion: Boss Edition</title>
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
     <div id="login-screen">
         <div class="box">
-            <h1>ALIEN<span>INVASION</span></h1>
-            <input type="text" id="username" placeholder="Seu Nickname" maxlength="10">
-            <button onclick="startGame()">INICIAR DEFESA</button>
+            <h1>STELAR<span>BOSS RUSH</span></h1>
+            <input type="text" id="username" placeholder="Nickname" maxlength="10">
+            <button onclick="startGame()">DECOLAR</button>
         </div>
     </div>
 
@@ -25,17 +25,15 @@
 
     <div id="overlay" class="hidden">
         <div class="box">
-            <h2 style="color: #ff0055;">MISSÃO FALHOU!</h2>
-            <p>Pontos: <span id="final-score">0</span></p>
+            <h2 id="death-msg">NAVE ABATIDA!</h2>
+            <p>Score: <span id="final-score">0</span></p>
             <div id="ranking-container">
-                <h3>TOP 5 RANKING</h3>
+                <h3>TOP PILOTOS</h3>
                 <ul id="rank-list"></ul>
             </div>
-            <button onclick="restartGame()">RECOMEÇAR</button>
-            <button onclick="location.reload()" style="background:#444;">SAIR</button>
+            <button onclick="restartGame()">RECOMECAR</button>
         </div>
     </div>
-
     <script src="script.js"></script>
 </body>
 </html>
