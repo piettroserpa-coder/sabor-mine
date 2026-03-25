@@ -2,12 +2,21 @@
 <html lang="pt-br">
 <head>
     <meta charset="UTF-8">
-    <title>Arcade Shooter - Pro</title>
+    <title>Arcade Shooter - Login</title>
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <div id="game-ui">
+    <div id="login-screen">
+        <div class="login-box">
+            <h1>ARCADE<br><span>SHOOTER</span></h1>
+            <input type="text" id="username" placeholder="Digite seu Nickname" maxlength="12">
+            <button onclick="startGame()">ENTRAR NO JOGO</button>
+        </div>
+    </div>
+
+    <div id="game-ui" class="hidden">
         <div id="stats">
+            <span>Jogador: <b id="display-name">---</b></span>
             <span>Pontos: <b id="score">0</b></span>
             <span>Fase: <b id="level">1</b></span>
         </div>
@@ -16,12 +25,13 @@
 
     <div id="overlay" class="hidden">
         <h1>FIM DE JOGO</h1>
-        <p>Sua pontuação: <span id="final-score">0</span></p>
+        <p>Pontuação de <span id="player-finish"></span>: <b id="final-score">0</b></p>
         <div id="ranking">
-            <h3>Top 3 Ranking</h3>
+            <h3>Top 5 Melhores</h3>
             <ul id="rank-list"></ul>
         </div>
-        <button onclick="restartGame()">Jogar Novamente</button>
+        <button onclick="restartGame()">Tentar Novamente</button>
+        <button onclick="location.reload()" style="background: #555;">Sair</button>
     </div>
 
     <script src="script.js"></script>
