@@ -1,10 +1,11 @@
-body { margin: 0; background: #050510; color: white; font-family: sans-serif; display: flex; justify-content: center; align-items: center; height: 100vh; overflow: hidden; }
-.box { background: rgba(10, 10, 30, 0.9); padding: 30px; border: 2px solid #00f2ff; border-radius: 15px; text-align: center; }
-h1 span { color: #ff00ff; display: block; font-size: 1.2rem; }
-input { display: block; width: 200px; margin: 20px auto; padding: 10px; background: #000; border: 1px solid #00f2ff; color: #fff; text-align: center; }
-button { background: #00f2ff; border: none; padding: 12px 25px; font-weight: bold; cursor: pointer; }
-#hud { display: flex; justify-content: space-between; width: 600px; color: #00f2ff; padding: 5px; font-family: monospace; }
-canvas { background: #000; border: 2px solid #333; display: block; }
-#rank-list { list-style: none; padding: 0; }
-#rank-list li { display: flex; justify-content: space-between; border-bottom: 1px solid #222; padding: 5px; }
+body { margin: 0; background: #020205; color: white; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; display: flex; justify-content: center; align-items: center; height: 100vh; overflow: hidden; }
+.box { background: rgba(15, 15, 35, 0.95); padding: 30px; border: 2px solid #00f2ff; border-radius: 15px; text-align: center; box-shadow: 0 0 20px #00f2ff44; }
+h1 span { color: #ff00ff; display: block; font-size: 1.2rem; letter-spacing: 3px; }
+input { display: block; width: 220px; margin: 20px auto; padding: 12px; background: #000; border: 1px solid #00f2ff; color: #fff; text-align: center; outline: none; }
+button { background: #00f2ff; border: none; padding: 12px 30px; font-weight: bold; cursor: pointer; text-transform: uppercase; transition: 0.2s; }
+button:hover { background: #fff; transform: scale(1.05); }
+#hud { display: flex; justify-content: space-between; width: 600px; color: #00f2ff; padding: 10px; font-weight: bold; }
+canvas { background: radial-gradient(circle, #0a0a20 0%, #000 100%); border: 2px solid #333; display: block; }
+#rank-list { list-style: none; padding: 0; margin-top: 15px; }
+#rank-list li { display: flex; justify-content: space-between; border-bottom: 1px solid #222; padding: 8px; font-size: 0.9rem; }
 .hidden { display: none !important; }
